@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class RbcParseController extends Controller
 {
@@ -25,8 +26,7 @@ class RbcParseController extends Controller
                 'subtitle' => '//*[@class="article__text__overview"]',
                 'textsEls' => '//*[contains(@class, "article__content")]//p',
                 'imgPrefix' => '',
-                ////div[contains(@class, "article__main-image__wrap")]//img |
-                'img' => '//img[contains(@class, "article__main-image__image")] | //img[contains(@class, "article__inline-item__image")]',
+                'img' => '(//div[contains(@class, "article__main-image__wrap")]//img)[1] | //img[contains(@class, "article__main-image__image")] | //img[contains(@class, "article__inline-item__image")]',
             ],
             'unusual' => [
                 'signatureUrlPart' => 'https://20idei.rbc.ru/',
@@ -41,27 +41,27 @@ class RbcParseController extends Controller
     }
 
 
-    public function index(){
+    public function index()
+    {
         $news = News::query()
-            ->orderBy('publish_date','desc')
-//            ->take(2)
-            ->get()
-        ;
-        return view('home')->with('news',$news);
+            ->orderBy('publish_date', 'desc')
+            ->get();
+        return view('home')->with('news', $news);
     }
 
-    public function news($publish_date){
+    public function news($publish_date)
+    {
         $new = News::query()
-            ->where('publish_date',$publish_date)
+            ->where('publish_date', $publish_date)
             ->get()
-            ->first()
-        ;
+            ->first();
         return view('news')->with('new', $new);
     }
 
-    public function conv(){
+    public function conv()
+    {
         $news = News::query()
-            ->orderBy('publish_date','desc')
+            ->orderBy('publish_date', 'desc')
             ->get(['texts'])
             ->first();
         $m = implode(' \n', $news['texts']);
@@ -72,6 +72,15 @@ class RbcParseController extends Controller
             </script>
         SCR;
         echo $scr;
+    }
+
+    public function purgeNoTexts(){
+        $report = News::query()
+            ->whereJsonLength('texts', 0)
+            ->orWhereNull('texts')
+            ->delete();
+        Log::emergency('Force delete all records because NO TEXTs: ', ['status' => $report]);
+        return $report;
     }
 
     public function currentUrl(): string
@@ -149,11 +158,20 @@ class RbcParseController extends Controller
             'texts' => $out['texts'] ?? null,
         ];
 
-        News::query()->updateOrCreate([
-            'publish_date' => $record['publish_date'],
-            'link' => $record['link'],
-        ], $record);
-
+        if (count($record['texts']) > 0) {
+            News::query()
+                ->updateOrCreate([
+                    'publish_date' => $record['publish_date'],
+                    'link' => $record['link'],
+                ], $record);
+        } else {
+            // delete record, if no texts. because something wrong
+            $message = News::query()
+                ->where('publish_date', $record['publish_date'])
+                ->where('link', $record['link'])
+                ->delete();
+            Log::warning('delete record because NO TEXTs: ', $message);
+        }
         return $record;
     }
 

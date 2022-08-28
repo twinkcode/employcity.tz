@@ -104,7 +104,7 @@
         }
 
         #app{
-            background: url("{{asset('img/bg01.webp')}}") no-repeat fixed top right;
+            background: url("{{asset('img/bg01.webp')}}") no-repeat fixed top right #e8ebeda3;
         }
 
     </style>
