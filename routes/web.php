@@ -21,6 +21,6 @@ Route::get('/news/{publish_date}', [\App\Http\Controllers\RbcParseController::cl
     ->where(['publish_date'=>'[0-9]+']);
 
 Route::get('/rbk',[\App\Http\Controllers\RbcParseController::class, 'parseListNews']);
-//Route::get('/conv',[\App\Http\Controllers\RbcParseController::class, 'conv']);
+Route::get('/conv',[\App\Http\Controllers\RbcParseController::class, 'conv']);
 Route::get('/clean-no-texts',[\App\Http\Controllers\RbcParseController::class, 'purgeNoTexts']);
 

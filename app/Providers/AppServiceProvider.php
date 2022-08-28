@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\Parsers\News;
+use App\Services\Parsers\Rbk;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(News::class, function ($app){
+            return new Rbk();
+        });
     }
 
     /**

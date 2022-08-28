@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Services\Parsers\Rbk;
+use App\Services\Parsers\FakeNews;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Promise\Promise;
@@ -11,14 +13,15 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Scalar\String_;
 
 class RbcParseController extends Controller
 {
-    public $xPathSamples;
+//    public $xPathSamples;
 
-    public function __construct()
+    public function xPaths()
     {
-        $this->xPathSamples = [
+        return [
             'default' => [
                 'signatureUrlPart' => 'https://www.rbc.ru/',
                 'context' => '//*[contains(@class, "article__content")]',
@@ -41,12 +44,12 @@ class RbcParseController extends Controller
     }
 
 
-    public function index()
+    public function index(Rbk $service)
     {
         $news = News::query()
             ->orderBy('publish_date', 'desc')
             ->get();
-        return view('home')->with('news', $news);
+        return view('home', ['news'=> $news, 'service'=>$service]);
     }
 
     public function news($publish_date)
@@ -74,12 +77,12 @@ class RbcParseController extends Controller
         echo $scr;
     }
 
-    public function purgeNoTexts(){
-        $report = News::query()
+    public function purgeNoTexts(News $news){
+        $report = $news->query()
             ->whereJsonLength('texts', 0)
             ->orWhereNull('texts')
             ->delete();
-        Log::emergency('Force delete all records because NO TEXTs: ', ['status' => $report]);
+        Log::emergency('Force delete all records because NO TEXTs: ', ['model'=>get_class($news),'status' => $report]);
         return $report;
     }
 
@@ -94,30 +97,25 @@ class RbcParseController extends Controller
         return $request->url ?? "https://rbc.ru/v10/ajax/get-news-feed/project/rbcnews.$city/lastDate/$timestamp/limit/$count?_=$timestamp";
     }
 
-    public function clean($html)
-    {
-        $patterns = ['/\n|\r/', '/\s\s+/'];
-        $replacements = ['', ' '];
-        return trim(preg_replace($patterns, $replacements, $html));
-    }
 
-    public function getElements(string $variant, \DOMXpath $xpath)
+
+    public function getElements(string $variant, \DOMXpath $xpath): array
     {
 
-        $xp = $this->xPathSamples[$variant];
+        $xp = $this->xPaths()[$variant];
         $context = $xpath->query($xp['context'])->item(0);
 
-        $title = $this->clean($xpath->query($xp['title'], $context)->item(0)->textContent);
+        $title = clean($xpath->query($xp['title'], $context)->item(0)->textContent);
 
         $subtitle = $xpath->query($xp['subtitle'], $context);
-        $subtitle = $subtitle->length ? $this->clean($subtitle->item(0)->nodeValue) : null;
+        $subtitle = $subtitle->length ? clean($subtitle->item(0)->nodeValue) : null;
 
         $textsEls = $xpath->query($xp['textsEls'], $context);
         $texts = [];
         foreach ($textsEls as $el) {
             $node = $el->firstChild;
             if ($node) {
-                do  $texts[] = $this->clean($node->textContent);
+                do  $texts[] = clean($node->textContent);
                 while ($node = $node->nextSibling);
             }
         }
@@ -145,7 +143,7 @@ class RbcParseController extends Controller
         libxml_use_internal_errors($internalErrors);
         $xpath = new \DOMXpath($doc);
 
-        if (str_contains($link, $this->xPathSamples['unusual']['signatureUrlPart']))
+        if (str_contains($link, $this->xPaths()['unusual']['signatureUrlPart']))
             $out = $this->getElements('unusual', $xpath);
         else $out = $this->getElements('default', $xpath);
 
@@ -204,7 +202,7 @@ class RbcParseController extends Controller
                 $item = [
 //                  'publish_date' => Carbon::createFromTimestamp($item->publish_date_t)->toDateTimeString(),
                     'publish_date' => $item->publish_date_t,
-                    'link' => preg_replace('/(.*)a href="(.*?)"(.*)/', '$2', $this->clean($item->html)),
+                    'link' => preg_replace('/(.*)a href="(.*?)"(.*)/', '$2', clean($item->html)),
                 ];
                 News::query()->updateOrCreate(['publish_date' => $item['publish_date']], $item);
                 return $item;
@@ -242,7 +240,7 @@ class RbcParseController extends Controller
                 $out[$key]['link'] = $element->getAttribute('href');
                 $out[$key]['publish_date'] = Carbon::createFromTimestamp($element->getAttribute('data-modif'))->toDateTimeString();
 //                $title = $elementsTitles->item($key)->nodeValue ?? null;
-//                $out[$key]['title_short']= $title ? $this->clean($title) : null;
+//                $out[$key]['title_short']= $title ? clean($title) : null;
             }
         }
         return $out;
