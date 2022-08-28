@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('news', function (Blueprint $table) {
+            $table->id();
+            $table->string('title',512)->nullable();
+            $table->text('subtitle')->nullable();
+            $table->string('img',2048)->nullable();
+            $table->string('link',2048);
+            $table->unsignedInteger('publish_date');
+            $table->jsonb('texts')->nullable();
+            $table->unsignedInteger('created_at')->useCurrent();
+            $table->unsignedInteger('updated_at')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('news');
+    }
+};
