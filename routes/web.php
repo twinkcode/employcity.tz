@@ -13,14 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', function () {
-//    return view('home');
-//});
-Route::get('/', [\App\Http\Controllers\RbcParseController::class, 'index']);
-Route::get('/news/{publish_date}', [\App\Http\Controllers\RbcParseController::class, 'news'])
+
+Route::get('/', [\App\Http\Controllers\NewsParseController::class, 'index']);
+
+Route::get('/news/{publish_date}', [\App\Http\Controllers\NewsParseController::class, 'news'])
     ->where(['publish_date'=>'[0-9]+']);
 
-Route::get('/rbk',[\App\Http\Controllers\RbcParseController::class, 'parseListNews']);
-Route::get('/conv',[\App\Http\Controllers\RbcParseController::class, 'conv']);
-Route::get('/clean-no-texts',[\App\Http\Controllers\RbcParseController::class, 'purgeNoTexts']);
+Route::get('/rbk',[\App\Http\Controllers\NewsParseController::class, 'parseListNews']);
+
+//Route::get('/clean-no-texts',[\App\Http\Controllers\NewsParseController::class, 'purgeNoTexts']);
 

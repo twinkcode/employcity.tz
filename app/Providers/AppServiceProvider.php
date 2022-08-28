@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(News::class, function ($app){
+        $this->app->singleton(News::class, function ($app){
             return new Rbk();
         });
     }
