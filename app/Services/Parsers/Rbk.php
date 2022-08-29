@@ -97,7 +97,7 @@ class Rbk implements News
                 ->where('publish_date', $record['publish_date'])
                 ->where('link', $record['link'])
                 ->delete();
-            Log::warning('delete record because NO TEXTs: ', $message);
+            Log::warning('delete record because NO TEXTs: ', ['message'=>$message]);
         }
         return $record;
     }
