@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\NewsParseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', [\App\Http\Controllers\NewsParseController::class, 'index']);
+Route::get('/', [NewsParseController::class, 'index']);
 
-Route::get('/news/{publish_date}', [\App\Http\Controllers\NewsParseController::class, 'news'])
-    ->where(['publish_date'=>'[0-9]+']);
+Route::get('/news/{publish_date}', [NewsParseController::class, 'news'])->where(['publish_date'=>'[0-9]+']);
 
-Route::get('/rbk',[\App\Http\Controllers\NewsParseController::class, 'parseListNews']);
+Route::get('/rbk',[NewsParseController::class, 'parseListNews']);
 
-//Route::get('/clean-no-texts',[\App\Http\Controllers\NewsParseController::class, 'purgeNoTexts']);
+Route::get('/clean-no-texts',[NewsParseController::class, 'purgeNoTexts']);
+
+Route::get('/truncate-base',[NewsParseController::class, 'baseTruncate']);
 

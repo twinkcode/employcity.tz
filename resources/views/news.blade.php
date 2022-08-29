@@ -8,7 +8,7 @@
                 <div class="row g-0">
                     <div class="col-md-4">
                         @if($new->img)
-                        <img src="{{$new->img}}" class="img-fluid rounded-start" alt="{{$new->title}}">
+                            <img src="{{$new->img}}" class="img-fluid rounded-start" alt="{{$new->title}}">
                         @endif
                     </div>
                     <div class="col-md-8">
@@ -18,8 +18,8 @@
                             <p class="card-text">{{ collect($new->texts)->implode(' ') }}</p>
                             <p class="card-text d-flex justify-content-between align-items-end">
                                 <small class="text-muted">{{\Carbon\Carbon::createFromTimestamp($new->publish_date)->toDateTimeString()}}</small>
+                                <a href="/" class="btn btn-primary btn-sm" target="_blank">к списку новостей</a></p>
                                 <a href="{{$new->link}}" class="btn btn-primary btn-sm" target="_blank">смотреть на доноре</a></p>
-{{--                            <p class="card-text"><small class="text-muted">{{$new->toJson(JSON_UNESCAPED_UNICODE)}}</small></p>--}}
                         </div>
                     </div>
                 </div>

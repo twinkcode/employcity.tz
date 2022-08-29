@@ -27,4 +27,9 @@ class NewsParseController extends Controller
         return $service->purgeNoTexts();
     }
 
+    public function baseTruncate(News $service)
+    {
+        return $service->baseTruncate();
+    }
+
 }

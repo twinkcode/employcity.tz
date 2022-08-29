@@ -184,4 +184,16 @@ class Rbk implements News
         return $report;
     }
 
+
+    /** optional function for clean table
+     * @param NewsModel $news
+     * @return mixed
+     */
+    public function baseTruncate()
+    {
+        $report = NewsModel::truncate();
+        Log::emergency('Table truncated: ', ['model' => get_class(new NewsModel)]);
+//        return $report;
+    }
+
 }
