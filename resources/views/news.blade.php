@@ -15,11 +15,16 @@
                         <div class="card-body">
                             <h5 class="card-title">{{$new->title}}</h5>
                             <span class="text-muted h6">{{$new->subtitle}}</span>
-                            <p class="card-text">{{ collect($new->texts)->implode(' ') }}</p>
-                            <p class="card-text d-flex justify-content-between align-items-end">
+                            <p class="card-text mt-4">{{ collect($new->texts)->implode(' ') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-footer mt-3">
+                            <div class="card-text d-flex justify-content-between align-items-center">
                                 <small class="text-muted">{{\Carbon\Carbon::createFromTimestamp($new->publish_date)->toDateTimeString()}}</small>
-                                <a href="/" class="btn btn-primary btn-sm" target="_blank">к списку новостей</a></p>
-                                <a href="{{$new->link}}" class="btn btn-primary btn-sm" target="_blank">смотреть на доноре</a></p>
+                                <a href="/" class="btn btn-primary btn-sm">к списку новостей</a>
+                                <a href="{{$new->link}}" class="btn btn-secondary btn-sm" target="_blank">смотреть на доноре</a>
+                            </div>
                         </div>
                     </div>
                 </div>

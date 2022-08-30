@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NewsParseController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,14 +13,24 @@ use App\Http\Controllers\NewsParseController;
 |
 */
 
+Route::controller(App\Http\Controllers\NewsParseController::class)->group(function () {
 
-Route::get('/', [NewsParseController::class, 'index']);
+    Route::get('/', 'index');
 
-Route::get('/news/{publish_date}', [NewsParseController::class, 'news'])->where(['publish_date'=>'[0-9]+']);
+    Route::get('/news/{publish_date}', 'news')->where(['publish_date' => '[0-9]+']);
 
-Route::get('/rbk',[NewsParseController::class, 'parseListNews']);
+    Route::get('/rbk', 'parseListNews');
 
-Route::get('/clean-no-texts',[NewsParseController::class, 'purgeNoTexts']);
+    Route::get('/clean-no-texts', 'purgeNoTexts');
 
-Route::get('/truncate-base',[NewsParseController::class, 'baseTruncate']);
+    Route::get('/truncate-base', 'baseTruncate');
+
+});
+
+Route::controller(App\Http\Controllers\VueViteController::class)->prefix('p2')->group(function () {
+
+    Route::get('/', 'index');
+    Route::get('/read-data', 'readData');
+
+});
 

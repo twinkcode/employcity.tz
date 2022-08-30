@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="11.595208"
+   height="7.4809799"
+   fill="currentColor"
+   class="bi bi-caret-down-fill"
+   viewBox="0 0 11.595208 7.4809799"
+   version="1.1"
+   id="svg184"
+   sodipodi:docname="arrow_down.svg"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs188" />
+  <sodipodi:namedview
+     id="namedview186"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="50.875"
+     inkscape:cx="5.7886978"
+     inkscape:cy="4.009828"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg184" />
+  <path
+     d="m 5.0453508,7.1400004 -4.796,-5.482 c -0.566,-0.645 -0.106,-1.6580000324467 0.753,-1.6580000324467 H 10.594351 A 1,1 0 0 1 11.347351,1.6590004 l -4.7960002,5.48 a 1,1 0 0 1 -1.506,0 z"
+     id="path182" />
+</svg>
