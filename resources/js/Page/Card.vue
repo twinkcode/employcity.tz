@@ -39,7 +39,7 @@
 
     </div>
     <div class="card-footer text-end" v-if="card.length > 0">
-        ИТОГО: <span class="fw-bold">{{totalCardCost.toFixed(2)}}<span class="text-muted"> ₽</span></span>
+        ИТОГО: <span class="fw-bold">{{parseFloat(totalCardCost).toFixed(2)}}<span class="text-muted"> ₽</span></span>
     </div>
     <div class="col-12 d-flex justify-content-around mt-5">
         <button class="btn btn-warning" @click="startInterval">startInterval</button>

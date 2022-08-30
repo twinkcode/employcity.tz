@@ -31,15 +31,14 @@ export default createStore({
             let randomCourse = parseFloat((Math.random() * (80 - 40) + 40).toFixed(2))
             commit('setCourse', randomCourse)
         },
-        // fillCardCosts({ commit, dispatch, state }){
-        //     if (getters.mergedByNames.length < 1) return
-        //     let prices = getters.mergedByNames.map(v=>({itemID:v.itemID, priceUS:v.priceUS }))
-        //     state.card = prices
-        // },
         destroyInterval({state}){
             clearInterval(state.intervalId)
         },
         startInterval({dispatch, state}){
+            if (state.intervalId) {
+                dispatch('destroyInterval')
+                delete state.intervalId
+            }
             state.intervalId = setInterval(()=>{
                 dispatch('getCourse');
                 dispatch('loadData');
