@@ -28,8 +28,10 @@
             >
                 <div class="col-7 w-50">{{ mItem(item).itemName }}</div>
                 <div class="col w50div3 text-center">{{ item.count }}</div>
-                <div class="col w50div3 text-center"><b
-                    :class="`${mItem(item).priceRU > mItem(item).priceUS * beforeCourse_US_RU ? 'text-danger' : 'text-success'}`">{{ (mItem(item).priceRU * item.count).toFixed(2) }} </b>
+                <div class="col w50div3 text-center">
+                    <b class="text-success">
+                        {{ (item.priceUS * currentCourse_US_RU * item.count).toFixed(2) }}
+                    </b>
                     <span class="text-muted">₽</span></div>
                 <div class="col w50div3 text-center">
                     <button class="btn btn-sm btn-danger" @click="removeCardItem(item)">удалить</button>
@@ -43,6 +45,7 @@
     </div>
     <div class="col-12 d-flex justify-content-around mt-5">
         <button class="btn btn-warning" @click="startInterval">startInterval</button>
+        <button class="btn btn-warning" @click="loadData">manualRefresh</button>
         <input class="form-control w-25" v-model="intervalTime">
         <button class="btn btn-warning ms-3" @click="destroyInterval">destroyInterval</button>
     </div>
@@ -55,17 +58,20 @@ import { mapFields } from 'vuex-map-fields'
 export default {
     name: 'Card',
     computed: {
-        ...mapState([ 'goods', 'names', 'card', 'beforeCourse_US_RU' ]),
-        ...mapGetters([ 'totalGoodsCost', 'totalCardCost', 'mergedByNames', 'groups' ]),
+        ...mapState([ 'goods', 'names', 'odata', 'data', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
+        ...mapGetters([ 'totalGoodsCost', 'totalCardCost', 'groups' ]),
         ...mapFields([ 'card','intervalTime' ]),
     },
     methods: {
-        ...mapActions([ 'destroyInterval', 'startInterval' ]),
+        ...mapActions([ 'destroyInterval', 'startInterval', 'loadData' ]),
         removeCardItem(item) {
             this.card.splice((this.card.findIndex(v => v.itemID === item.itemID)), 1)
         },
         mItem(item) {
-            return this.mergedByNames.find(v => v.itemID === item.itemID)
+            return this.data.find(v => v.itemID === item.itemID)
+        },
+        moItem(item) {
+            return this.odata.find(v => v.itemID === item.itemID)
         },
     },
 }

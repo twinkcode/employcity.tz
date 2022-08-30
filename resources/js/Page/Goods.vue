@@ -5,24 +5,24 @@
     >
         <div
             class="card-header h5 fw-bold text-bg-secondary "
-            v-if="mergedByNames.map(v => v.groupID).includes(group.id)"
+            v-if="data.map(v => v.groupID).includes(group.id)"
         >
             {{ group.name }}
         </div>
         <div class="card-body p-0">
             <ul class="list-group list-group-flush">
 
-                <template v-for="(item, itemKey) in mergedByNames">
+                <template v-for="(item, itemKey) in data">
                     <li
-                        v-if="group.id === item.groupID"
-                        :class="`${item.priceRU > item.priceUS * beforeCourse_US_RU ? 'bg-danger' : 'bg-success'}  bg-opacity-25 list-group-item d-flex justify-content-between align-items-center px-3`"
+                        v-if="group.id === item.groupID && odata[itemKey]"
+                        :class="`${item.priceRU > odata[itemKey].priceRU ? 'bg-danger' : 'bg-success'}  bg-opacity-25 list-group-item d-flex justify-content-between align-items-center px-3`"
                         :key="itemKey"
                     >
                         <div class="item-name col-8 col-lg-10">
-                            {{ item.itemName }} <span class="badge bg-secondary">{{item.itemCount}}</span>
+                            {{ item.itemName }} <span class="badge bg-secondary">{{item.count}}</span>
                         </div>
                         <div class="item-price col-4 col-lg-2 d-flex justify-content-end align-items-center">
-                            <div><b :class="`${item.priceRU > item.priceUS * beforeCourse_US_RU ? 'text-danger' : 'text-success'}`">{{ item.priceRU }}</b>&nbsp;<span class="text-muted">₽</span></div>
+                            <div><b :class="`${item.priceRU > odata[itemKey].priceRU ? 'text-danger' : 'text-success'}`">{{ item.priceRU }}</b><span class="text-muted">₽</span></div>
                             <div class="arrows ms-2 text-muted d-flex flex-column justify-content-center align-items-center">
                                 <div class="up" @click="itemPlus(item)"></div>
                                 <template v-if="card.find(v=>v.itemID === item.itemID)">
@@ -53,19 +53,19 @@ import { mapFields } from 'vuex-map-fields'
 export default {
     name: 'Goods',
     computed: {
-        ...mapState([ 'goods', 'names', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
-        ...mapGetters([ 'mergedByNames', 'groups', 'totalGoodsCost']),
+        ...mapState([ 'goods', 'names', 'data', 'odata', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
+        ...mapGetters([ 'groups', 'totalGoodsCost']),
         ...mapFields([ 'card' ]),
     },
     methods: {
         itemPlus(item) {
             let cardItem =  this.card.find(v=>v.itemID === item.itemID)
             if (!cardItem)  this.card.push({ itemID: item.itemID, count: 1, priceUS: item.priceUS})
-            else cardItem.count++
+            else if (this.data.find(v => v.itemID === cardItem.itemID).count > cardItem.count) cardItem.count++
         },
         itemMinus(item) {
             let cardItem =  this.card.find(v=>v.itemID === item.itemID)
-            if (cardItem)   cardItem.count <= 1
+            if (cardItem)  cardItem.count <= 1
                 ? this.card.splice((this.card.findIndex(v=>v.itemID === item.itemID)),1)
                 : cardItem.count--
         },

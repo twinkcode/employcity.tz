@@ -12,15 +12,22 @@ class VueViteController extends Controller
         return view('vue_layouts.index');
     }
 
-    public function readData()
+    public function readData(Request $request)
     {
-        $goods = Storage::get('TZ_front/data.json');
-        $names = Storage::get('TZ_front/names.json');
+        $goods = $request->has('random') ? $this->randomizeData() : json_decode(Storage::get('TZ_front/data.json'));
+        $names = json_decode(Storage::get('TZ_front/names.json'));
         return [
-            'goods' => json_decode($goods),
-            'names' => json_decode($names),
+            'goods' => $goods,
+            'names' => $names,
         ];
     }
 
+    private function randomizeData(){
+        $goods = json_decode(Storage::get('TZ_front/data.json'),true);
+        foreach ($goods['Value']['Goods'] as &$v){
+            $v["C"] = mt_rand(1,999) / 100;
+        }
+        return $goods;
+    }
 
 }
