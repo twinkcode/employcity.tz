@@ -44,8 +44,8 @@
         ИТОГО: <span class="fw-bold">{{parseFloat(totalCardCost).toFixed(2)}}<span class="text-muted"> ₽</span></span>
     </div>
     <div class="col-12 d-flex justify-content-around mt-5">
-        <button class="btn btn-warning" @click="startInterval">startInterval</button>
         <button class="btn btn-warning" @click="loadData">manualRefresh</button>
+        <button class="btn btn-warning" @click="startInterval">startInterval</button>
         <input class="form-control w-25" v-model="intervalTime">
         <button class="btn btn-warning ms-3" @click="destroyInterval">destroyInterval</button>
     </div>
@@ -58,8 +58,8 @@ import { mapFields } from 'vuex-map-fields'
 export default {
     name: 'Card',
     computed: {
-        ...mapState([ 'goods', 'names', 'odata', 'data', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
-        ...mapGetters([ 'totalGoodsCost', 'totalCardCost', 'groups' ]),
+        ...mapState([ 'goods', 'names', 'odata', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
+        ...mapGetters([ 'data', 'totalGoodsCost', 'totalCardCost', 'groups' ]),
         ...mapFields([ 'card','intervalTime' ]),
     },
     methods: {
@@ -69,9 +69,6 @@ export default {
         },
         mItem(item) {
             return this.data.find(v => v.itemID === item.itemID)
-        },
-        moItem(item) {
-            return this.odata.find(v => v.itemID === item.itemID)
         },
     },
 }

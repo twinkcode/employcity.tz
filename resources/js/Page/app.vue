@@ -3,6 +3,16 @@
         <Loader />
         <div class="container">
             <div class="row mt-2">
+                <div class="col-12">
+                    <a class="navbar-brand align-items-center" href="/">
+                        <span class="px-3 fw-semibold text-primary text-opacity-75">
+                        employ<span class="text-warning">•</span>city
+                    </span>
+                        <span class="position-relative btn btn-outline-info">1 часть ТЗ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">blade</span></span>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-2">
                 <div class="col-12 col-lg-6">
                     <h1>Товары</h1>
                     <SliderCourse />
@@ -46,11 +56,14 @@ export default {
     },
     async created()  {
         this.$store.commit('setLoader', true)
+
+    },
+    async mounted(){
         await this.$store.dispatch('loadData');
-        await this.$store.dispatch('fillData');
+        await this.$store.dispatch('saveOldData');
         await this.$store.dispatch('startInterval');
         this.$store.commit('setLoader', false)
-    },
+    }
 }
 </script>
 

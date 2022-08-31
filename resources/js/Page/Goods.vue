@@ -22,16 +22,27 @@
                             {{ item.itemName }} <span class="badge bg-secondary">{{item.count}}</span>
                         </div>
                         <div class="item-price col-4 col-lg-2 d-flex justify-content-end align-items-center">
-                            <div><b :class="`${item.priceRU > odata[itemKey].priceRU ? 'text-danger' : 'text-success'}`">{{ item.priceRU }}</b><span class="text-muted">₽</span></div>
+                            <div>
+                                <b :class="`${item.priceRU > odata[itemKey].priceRU ? 'text-danger' : 'text-success'}`">
+                                    {{ item.priceRU }}
+                                </b>
+                                <span class="text-muted">₽</span>
+                            </div>
                             <div class="arrows ms-2 text-muted d-flex flex-column justify-content-center align-items-center">
-                                <div class="up" @click="itemPlus(item)"></div>
+                                <div
+                                    class="up"
+                                    @click="itemPlus(item)"
+                                />
                                 <template v-if="card.find(v=>v.itemID === item.itemID)">
                                     <input class="currentCount" v-model="card.find(v=>v.itemID === item.itemID).count">
                                 </template>
                                 <template v-else>
                                     <input class="currentCount" />
                                 </template>
-                                <div class="down" @click="itemMinus(item)"></div>
+                                <div
+                                    class="down"
+                                    @click="itemMinus(item)"
+                                />
                             </div>
                         </div>
                     </li>
@@ -42,7 +53,9 @@
 
     </div>
     <div class="card-footer" style="height: 100px;">
-        <div class="text-end"><span>Всего товаров на сумму: </span><span>{{ totalGoodsCost }}</span></div>
+        <div class="text-end">
+            <span>Всего товаров на сумму: {{ totalGoodsCost }}</span>
+        </div>
     </div>
 </template>
 
@@ -53,8 +66,8 @@ import { mapFields } from 'vuex-map-fields'
 export default {
     name: 'Goods',
     computed: {
-        ...mapState([ 'goods', 'names', 'data', 'odata', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
-        ...mapGetters([ 'groups', 'totalGoodsCost']),
+        ...mapState([ 'goods', 'names', 'odata', 'card', 'currentCourse_US_RU', 'beforeCourse_US_RU' ]),
+        ...mapGetters([ 'groups', 'totalGoodsCost', 'data']),
         ...mapFields([ 'card' ]),
     },
     methods: {
@@ -65,7 +78,8 @@ export default {
         },
         itemMinus(item) {
             let cardItem =  this.card.find(v=>v.itemID === item.itemID)
-            if (cardItem)  cardItem.count <= 1
+            if (cardItem)
+                cardItem.count <= 1
                 ? this.card.splice((this.card.findIndex(v=>v.itemID === item.itemID)),1)
                 : cardItem.count--
         },
@@ -75,36 +89,35 @@ export default {
 
 <style scoped lang="scss">
 
-    .arrows {
-        margin-top: 16px;
+.arrows {
+    margin-top: 16px;
 
-        .up, .down {
-            cursor: crosshair;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-
-        .up {
-            margin-top: -18px;
-            background: url("/img/arrow_up.svg") no-repeat top center;
-            height: 7.5px;
-        }
-
-        .down {
-            background: url("/img/arrow_down.svg") no-repeat bottom center;
-            height: 7.5px;
-        }
-
-        input.currentCount {
-            width: 30px;
-            height: 22px;
-            font-size: 12px;
-            text-align: center;
-            border-color: lightgray;
-            padding: 0;
-            margin: 0;
-        }
+    .up, .down {
+        cursor: crosshair;
+        margin: 0;
+        padding: 0;
+        width: 100%;
     }
 
+    .up {
+        margin-top: -18px;
+        background: url("/img/arrow_up.svg") no-repeat top center;
+        height: 7.5px;
+    }
+
+    .down {
+        background: url("/img/arrow_down.svg") no-repeat bottom center;
+        height: 7.5px;
+    }
+
+    input.currentCount {
+        width: 30px;
+        height: 22px;
+        font-size: 12px;
+        text-align: center;
+        border-color: lightgray;
+        padding: 0;
+        margin: 0;
+    }
+}
 </style>
